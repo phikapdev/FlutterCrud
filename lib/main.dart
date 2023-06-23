@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_crud/HomePage.dart';
+import 'package:flutter_crud/screens/HomeScreen.dart';
+import 'package:flutter_crud/screens/FormularioScreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: 'home',
       routes: {
-        'home':(_) => HomePage()
+        'home':(_) => HomeScreen(),
+        'form':(_) => FormularioScreen()
       },
     );
   }
