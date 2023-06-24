@@ -15,7 +15,7 @@ class Cliente {
         required this.createAt,
     });
 
-    factory Cliente.fromJson(Map<String, dynamic> json) => Cliente(
+    factory Cliente.fromMap(Map<String, dynamic> json) => Cliente(
         id: json["id"],
         nombre: json["nombre"],
         apellido: json["apellido"],
@@ -23,11 +23,18 @@ class Cliente {
         createAt: DateTime.parse(json["createAt"]),
     );
 
-    Map<String, dynamic> toJson() => {
+    Map<String, dynamic> toMap() => {
         "id": id,
         "nombre": nombre,
         "apellido": apellido,
         "email": email,
         "createAt": "${createAt.year.toString().padLeft(4, '0')}-${createAt.month.toString().padLeft(2, '0')}-${createAt.day.toString().padLeft(2, '0')}",
     };
+
+    Cliente copy() => Cliente(
+      id: this.id, 
+      nombre: this.nombre, 
+      apellido: this.apellido,
+      email:  this.email,
+      createAt: this.createAt);
 }
