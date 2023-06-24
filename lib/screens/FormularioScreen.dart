@@ -8,9 +8,9 @@ class FormularioScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("FormularioScreen"),),
+      appBar: AppBar(title: Text("Form"),),
        body: Center(
-         child: Text('HomeScreen'),
+         child: Text('FormularioScreen'),
       ),
     );
   }
