@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
   final clienteService = Provider.of<ClienteService>(context);
   
     return Scaffold(
-      appBar: AppBar(title: Text('Home')),
+      appBar: AppBar(title: Text('Listado Clientes')),
       body:ListView.builder(
         itemCount: clienteService.clientes.length,
         itemBuilder:(BuildContext context, int index) => GestureDetector(
@@ -21,8 +21,7 @@ class HomeScreen extends StatelessWidget {
             cliente: clienteService.clientes[index],
           ),
           onTap: () {
-            clienteService.selectedProduct = clienteService.clientes[index].copy();
-             Navigator.pushNamed(context, 'product');
+            
           }
         )
       ),

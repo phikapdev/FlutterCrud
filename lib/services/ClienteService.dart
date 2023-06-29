@@ -6,37 +6,78 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_crud/models/Cliente.dart';
 
 class ClienteService extends ChangeNotifier {
-  final String _baseUrl = 'localhost:8080';
-
-  final List<Cliente> clientes = [];
+  final String _baseUrl = '192.168.0.233:8080';
+  
+  List<Cliente> clientes = [];
   late Cliente selectedProduct;
 
   bool isLoading = false;
   bool isSaving = false;
 
   ClienteService() {
-    this.loadClientes();
+    getClientes();
   }
 
-  Future<List<Cliente>> loadClientes() async {
+  Future<List<Cliente>> getClientes() async {
 
-    this.isLoading = true;
+    isLoading = true;
     notifyListeners();
 
     final url = Uri.http(_baseUrl, '/api/clientes');
     final resp = await http.get(url);
-    final Map<String, dynamic> clienteMap = json.decode(resp.body);
-    
-    clienteMap.forEach((key, value) {
-        final tempCliente = Cliente.fromMap(value);
-        this.clientes.add(tempCliente);
-    });
+    List<dynamic> listCliente = jsonDecode(resp.body);
 
-     this.isLoading = false;
+    clientes = listCliente.map((item) => Cliente.fromMap(item)).toList();
+  
+     isLoading = false;
      notifyListeners();
 
-    return this.clientes;
+    return clientes;
 
+  }
+
+  Future<Cliente> getCliente(int id) async {
+
+    isLoading = true;
+    notifyListeners();
+
+    final url = Uri.http(_baseUrl, '/api/clientes/${id}');
+    final resp = await http.get(url);
+    Cliente cliente = jsonDecode(resp.body);
+
+     isLoading = false;
+     notifyListeners();
+
+    return cliente;
+
+  }
+
+  Future<int> createCliente(Cliente cliente) async {
+    final url = Uri.http(_baseUrl, '/api/clientes');
+    final resp = await http.post(url, body: cliente.toMap());
+    final decodeData = jsonDecode(resp.body);
+
+    print(decodeData);
+    cliente.id = decodeData['id'];
+    return cliente.id;
+  }
+
+  Future<int> updateCliente(Cliente cliente) async {
+    final url = Uri.http(_baseUrl, '/api/clientes/${cliente.id}');
+    final resp = await http.put(url, body: cliente.toMap());
+    final decodeData = jsonDecode(resp.body);
+
+    print(decodeData);
+    cliente.id = decodeData['id'];
+    return cliente.id;
+  }
+
+  Future<void> deleteCliente(int id)async{
+    final url = Uri.http(_baseUrl, '/api/clientes/${id}');
+    final resp = await http.delete(url);
+    final decodeData = jsonDecode(resp.body);
+
+    print(decodeData);
   }
 
   Future saveOrCreateProduct(Cliente cliente) async{
@@ -44,39 +85,14 @@ class ClienteService extends ChangeNotifier {
     isSaving = true;
     notifyListeners();
 
-
     if(cliente.id == null){
-      await this.createProduct(cliente);
+      await this.createCliente(cliente);
     }else{
-      await this.updateProduct(cliente);
+      await this.updateCliente(cliente);
     }
 
     isSaving = false;
     notifyListeners();
 
-  }
-
-  Future<int> updateProduct(Cliente cliente) async {
-    final url = Uri.https(_baseUrl, 'products/${cliente.id}.json');
-    final resp = await http.put(url, body: cliente.toMap());
-    final decodeData = resp.body;
-
-    final index = this.clientes.indexWhere((element) => element.id == cliente.id);
-    this.clientes[index] = cliente;
-
-    return cliente.id;
-  }
-
-  Future<int> createProduct(Cliente cliente) async {
-    final url = Uri.https(_baseUrl, 'products.json');
-    final resp = await http.post(url, body: cliente.toMap());
-    final decodeData = json.decode(resp.body);
-
-    cliente.id = decodeData['name'];
-    this.clientes.add(cliente);
-
-    print(decodeData);
-
-    return cliente.id;
   }
 }
