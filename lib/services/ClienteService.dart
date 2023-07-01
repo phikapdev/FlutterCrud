@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -59,7 +57,7 @@ class ClienteService extends ChangeNotifier {
 
     print(decodeData);
     cliente.id = decodeData['id'];
-    return cliente.id;
+    return cliente.id!;
   }
 
   Future<int> updateCliente(Cliente cliente) async {
@@ -69,7 +67,7 @@ class ClienteService extends ChangeNotifier {
 
     print(decodeData);
     cliente.id = decodeData['id'];
-    return cliente.id;
+    return cliente.id!;
   }
 
   Future<void> deleteCliente(int id)async{

@@ -1,14 +1,14 @@
 import 'dart:convert';
 
 class Cliente {
-    int id;
+    int? id;
     String nombre;
     String apellido;
     String email;
     String createAt;
 
     Cliente({
-        required this.id,
+        this.id,
         required this.nombre,
         required this.apellido,
         required this.email,
@@ -28,11 +28,9 @@ class Cliente {
     );
 
     Map<String, dynamic> toMap() => {
-        "id": id,
         "nombre": nombre,
         "apellido": apellido,
-        "email": email,
-        "createAt": createAt,
+        "email": email
     };
 
     Cliente copy() => Cliente(
