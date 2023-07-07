@@ -50,24 +50,22 @@ class ClienteService extends ChangeNotifier {
 
   }
 
-  Future<int> createCliente(Cliente cliente) async {
+  Future<void> createCliente(Cliente cliente) async {
     final url = Uri.http(_baseUrl, '/api/clientes');
     final resp = await http.post(url, body: cliente.toMap());
     final decodeData = jsonDecode(resp.body);
 
     print(decodeData);
     cliente.id = decodeData['id'];
-    return cliente.id!;
   }
 
-  Future<int> updateCliente(Cliente cliente) async {
+  Future<void> updateCliente(Cliente cliente) async {
     final url = Uri.http(_baseUrl, '/api/clientes/${cliente.id}');
     final resp = await http.put(url, body: cliente.toMap());
     final decodeData = jsonDecode(resp.body);
 
     print(decodeData);
     cliente.id = decodeData['id'];
-    return cliente.id!;
   }
 
   Future<void> deleteCliente(int id)async{
