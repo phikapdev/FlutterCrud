@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_crud/providers/ClienteFormProvider.dart';
 import 'package:flutter_crud/services/ClienteService.dart';
-import 'package:flutter_crud/widgets/InputDecorations.dart';
+import 'package:flutter_crud/themes/InputDecorations.dart';
 
 class FormularioScreen extends StatelessWidget {
   @override
@@ -84,7 +84,7 @@ class _ClienteForm extends StatelessWidget {
                 initialValue: cliente.nombre,
                 onChanged: (value) => cliente.nombre = value,
                 validator: (value) {
-                  if (value == null || value.length < 1) {
+                  if (value == null || value.isEmpty) {
                     return 'El Nombre es Obligatorio';
                   }
                   return null;
@@ -97,7 +97,7 @@ class _ClienteForm extends StatelessWidget {
                 initialValue: cliente.apellido,
                 onChanged: (value) => cliente.apellido = value,
                 validator: (value) {
-                  if (value == null || value.length < 1) {
+                  if (value == null || value.isEmpty) {
                     return 'El Nombre es Obligatorio';
                   }
                   return null;
@@ -110,7 +110,7 @@ class _ClienteForm extends StatelessWidget {
                 initialValue: cliente.email,
                 onChanged: (value) => cliente.email = value,
                 validator: (value) {
-                  if (value == null || value.length < 1) {
+                  if (value == null || value.isEmpty) {
                     return 'El Email es Obligatorio';
                   }
                   return null;
