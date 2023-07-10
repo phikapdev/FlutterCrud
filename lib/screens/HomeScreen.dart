@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
   final clienteService = Provider.of<ClienteService>(context);
   
     return Scaffold(
-      appBar: AppBar(title: Text('Listado Clientes')),
+      appBar: AppBar(title: Text('Flutter')),
       body:ListView.separated(
         separatorBuilder: (context, index) => Divider(
           color: Colors.black,
