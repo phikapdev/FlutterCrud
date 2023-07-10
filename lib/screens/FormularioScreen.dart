@@ -35,28 +35,29 @@ class _ClienteScreenBody extends StatelessWidget {
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           child: Column(children: [
             SizedBox(
-              height: 100,
+              height: 20,
             ),
             _ClienteForm(),
             SizedBox(
-              height: 50,
+              height: 30,
             ),
             MaterialButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
                 disabledColor: Colors.grey,
                 elevation: 0,
-                color: Colors.deepPurple,
+                color: Colors.blueGrey,
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-                  child: Text('Guardar', style: TextStyle(color: Colors.white)),
+                  child: Text(clienteService.isSaving? 'Cargando':'Guardar', style: TextStyle(color: Colors.white)),
                 ),
                 onPressed: clienteService.isSaving
                     ? null
                     : () async {
                         if (!clienteForm.isValidForm()) return;
-                        await clienteService
-                            .saveOrCreateProduct(clienteForm.cliente);
+
+                        await clienteService.saveOrCreateProduct(clienteForm.cliente);
+                        Navigator.pop(context);
                       })
           ])),
     );
@@ -70,10 +71,9 @@ class _ClienteForm extends StatelessWidget {
     final cliente = clienteForm.cliente;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.all(30),
       child: Container(
         width: double.infinity,
-        decoration: _buildBoxDecoration(),
         child: Form(
           key: clienteForm.formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -118,7 +118,6 @@ class _ClienteForm extends StatelessWidget {
                 decoration: InputDecorations.authInputDecoratios(
                     hintText: "Email", labelText: "Email"),
               ),
-              SizedBox(height: 30),
             ],
           ),
         ),
@@ -126,15 +125,4 @@ class _ClienteForm extends StatelessWidget {
     );
   }
 
-  BoxDecoration _buildBoxDecoration() => BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(25),
-              bottomLeft: Radius.circular(25)),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                offset: Offset(0, 5),
-                blurRadius: 5)
-          ]);
 }

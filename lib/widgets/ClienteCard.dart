@@ -9,11 +9,11 @@ class ClienteCard extends StatelessWidget {
  
   @override
   Widget build(BuildContext context) {
-    return Card(child:ListTile(
+    return ListTile(
           title: Text(cliente.nombre + " " + cliente.apellido),
           subtitle: Text(cliente.email),
           leading: Icon(Icons.person, size: 45),
-          trailing: Text(cliente.createAt.toString())));
+          trailing: Text(cliente.createAt.toString()));
   }
 }
 

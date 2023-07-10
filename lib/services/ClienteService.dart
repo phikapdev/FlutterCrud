@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_crud/models/Cliente.dart';
+import 'package:flutter_crud/utils/ApiConfig.dart';
 
 class ClienteService extends ChangeNotifier {
-  final String _baseUrl = '192.168.0.233:8080';
   
   List<Cliente> clientes = [];
   late Cliente selectedProduct;
@@ -21,7 +21,7 @@ class ClienteService extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    final url = Uri.http(_baseUrl, '/api/clientes');
+    final url = Uri.http(ApiConfig.baseUrl , ApiConfig.endPoint);
     final resp = await http.get(url);
     List<dynamic> listCliente = jsonDecode(resp.body);
 
@@ -39,7 +39,7 @@ class ClienteService extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    final url = Uri.http(_baseUrl, '/api/clientes/${id}');
+    final url = Uri.http(ApiConfig.baseUrl , '${ApiConfig.endPoint}/$id');
     final resp = await http.get(url);
     Cliente cliente = jsonDecode(resp.body);
 
@@ -50,32 +50,37 @@ class ClienteService extends ChangeNotifier {
 
   }
 
-  Future<int> createCliente(Cliente cliente) async {
-    final url = Uri.http(_baseUrl, '/api/clientes');
-    final resp = await http.post(url, body: cliente.toMap());
+  Future<void> createCliente(Cliente cliente) async {
+    final url = Uri.http(ApiConfig.baseUrl , ApiConfig.endPoint);
+    final resp = await http.post(
+      url, 
+      body: cliente.toMap() ,  
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    );
     final decodeData = jsonDecode(resp.body);
-
-    print(decodeData);
     cliente.id = decodeData['id'];
-    return cliente.id!;
   }
 
-  Future<int> updateCliente(Cliente cliente) async {
-    final url = Uri.http(_baseUrl, '/api/clientes/${cliente.id}');
-    final resp = await http.put(url, body: cliente.toMap());
-    final decodeData = jsonDecode(resp.body);
+  Future<void> updateCliente(Cliente cliente) async {
+    final url = Uri.http(ApiConfig.baseUrl , '${ApiConfig.endPoint}/${cliente.id}');
+    final resp = await http.put(
+      url, 
+      body: cliente.toMap(),  
+      headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+      }
+    );
 
-    print(decodeData);
+    final decodeData = jsonDecode(resp.body);
     cliente.id = decodeData['id'];
-    return cliente.id!;
   }
 
   Future<void> deleteCliente(int id)async{
-    final url = Uri.http(_baseUrl, '/api/clientes/${id}');
+    final url = Uri.http(ApiConfig.baseUrl , '${ApiConfig.endPoint}/$id');
     final resp = await http.delete(url);
     final decodeData = jsonDecode(resp.body);
-
-    print(decodeData);
   }
 
   Future saveOrCreateProduct(Cliente cliente) async{
@@ -84,9 +89,9 @@ class ClienteService extends ChangeNotifier {
     notifyListeners();
 
     if(cliente.id == null){
-      await this.createCliente(cliente);
+      await createCliente(cliente);
     }else{
-      await this.updateCliente(cliente);
+      await updateCliente(cliente);
     }
 
     isSaving = false;

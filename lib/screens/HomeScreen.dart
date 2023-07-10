@@ -15,15 +15,49 @@ class HomeScreen extends StatelessWidget {
   
     return Scaffold(
       appBar: AppBar(title: Text('Listado Clientes')),
-      body:ListView.builder(
+      body:ListView.separated(
+        separatorBuilder: (context, index) => Divider(
+          color: Colors.black,
+        ),
         itemCount: clienteService.clientes.length,
         itemBuilder:(BuildContext context, int index) => GestureDetector(
           child: ClienteCard(
             cliente: clienteService.clientes[index],
           ),
           onTap: () {
-            clienteService.selectedProduct = clienteService.clientes[index].copy();
-             Navigator.pushNamed(context, 'form');
+
+             showModalBottomSheet(
+                    context: context,
+                    isDismissible: true,
+                    builder: (context) {
+                      return Wrap(
+                        children: [
+                         ListTile(
+                            leading: Icon(Icons.grid_view),
+                            title: Text('Ver'),
+                            onTap: () {
+                              clienteService.selectedProduct = clienteService.clientes[index].copy();
+                              Navigator.pushNamed(context, 'form');
+                            }
+                          ),
+                          ListTile(
+                            leading: Icon(Icons.update),
+                            title: Text('Actualizar'),
+                            onTap: () {
+                              clienteService.selectedProduct = clienteService.clientes[index].copy();
+                              Navigator.pushNamed(context, 'form');
+                            }
+                          ),
+                          ListTile(
+                            leading: Icon(Icons.delete),
+                            title: Text('Borrar'),
+                             onTap: () {
+                              clienteService.deleteCliente(clienteService.clientes[index].id!);
+                            }
+                          )
+                        ],
+                    );
+            });
           }
         )
       ),
