@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_crud/providers/ClienteFormProvider.dart';
 import 'package:flutter_crud/services/ClienteService.dart';
@@ -57,7 +56,7 @@ class _ClienteScreenBody extends StatelessWidget {
                         if (!clienteForm.isValidForm()) return;
 
                         await clienteService.saveOrCreateProduct(clienteForm.cliente);
-                        Navigator.pop(context);
+                       Navigator.of(context).pop();
                       })
           ])),
     );

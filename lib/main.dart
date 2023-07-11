@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_crud/screens/HomeScreen.dart';
+import 'package:flutter_crud/screens/DetallesScreen.dart';
 import 'package:flutter_crud/screens/FormularioScreen.dart';
 import 'package:flutter_crud/services/ClienteService.dart';
 
@@ -30,7 +31,8 @@ class MyApp extends StatelessWidget {
       initialRoute: 'home',
       routes: {
         'home':(_) => HomeScreen(),
-        'form':(_) => FormularioScreen()
+        'form':(_) => FormularioScreen(),
+        'details':(_) => DetallesScreen()
       },
     );
   }
