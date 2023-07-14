@@ -57,7 +57,7 @@ class _ClienteScreenBody extends StatelessWidget {
                         if (!clienteForm.isValidForm()) return;
 
                         await clienteService.saveOrCreateProduct(clienteForm.cliente);
-                        Navigator.pop(context);
+                        Navigator.pop(context, true);
                       })
           ])),
     );
