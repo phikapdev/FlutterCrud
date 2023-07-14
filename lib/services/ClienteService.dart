@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -12,62 +14,62 @@ class ClienteService extends ChangeNotifier {
   bool isLoading = false;
   bool isSaving = false;
 
+  Map<String,String> headers = { HttpHeaders.contentTypeHeader : 'application/json' };
+
   ClienteService() {
     getClientes();
   }
 
   Future<List<Cliente>> getClientes() async {
-
     isLoading = true;
     notifyListeners();
 
     final url = Uri.http(ApiConfig.baseUrl , ApiConfig.endPoint);
-    final resp = await http.get(url);
-    List<dynamic> listCliente = jsonDecode(resp.body);
-
-    clientes = listCliente.map((item) => Cliente.fromMap(item)).toList();
-  
-     isLoading = false;
-     notifyListeners();
+    final resp = await http.get(url, headers: headers);
+    List<dynamic> respJson = jsonDecode(resp.body);
+    clientes = respJson.map((item) => Cliente.fromMap(item)).toList();
+    
+    isLoading = false;
+    notifyListeners();
 
     return clientes;
-
   }
 
   Future<Cliente> getCliente(int id) async {
-
     isLoading = true;
     notifyListeners();
 
     final url = Uri.http(ApiConfig.baseUrl , '${ApiConfig.endPoint}/$id');
-    final resp = await http.get(url);
+    final resp = await http.get(url, headers: headers);
     Cliente cliente = jsonDecode(resp.body);
 
-     isLoading = false;
-     notifyListeners();
+    isLoading = false;
+    notifyListeners();
 
     return cliente;
-
   }
 
   Future<void> createCliente(Cliente cliente) async {
     final url = Uri.http(ApiConfig.baseUrl, ApiConfig.endPoint);
-    final resp = await http.post(url, body: cliente.toMap());
-    final decodeData = jsonDecode(resp.body);
-    cliente.id = decodeData['id'];
+    final resp = await http.post(url, body: cliente.toJson(), headers: headers);
+    final respJson = jsonDecode(resp.body);
+    cliente.id = respJson['id'];
+    print(respJson);
   }
 
   Future<void> updateCliente(Cliente cliente) async {
     final url = Uri.http(ApiConfig.baseUrl, '${ApiConfig.endPoint}/${cliente.id}');
-    final resp = await http.put(url, body: cliente.toMap());
-    final decodeData = jsonDecode(resp.body);
-    cliente.id = decodeData['id'];
+    final resp = await http.put(url, body: cliente.toJson(), headers: headers);
+    final respJson = jsonDecode(resp.body);
+    print(respJson);
+    cliente.id = respJson['id'];
   }
 
   Future<void> deleteCliente(int id)async{
     final url = Uri.http(ApiConfig.baseUrl , '${ApiConfig.endPoint}/$id');
-    final resp = await http.delete(url);
-    final decodeData = jsonDecode(resp.body);
+    final resp = await http.delete(url, headers: headers);
+    final respJson = jsonDecode(resp.body);
+    print(respJson);
   }
 
   Future saveOrCreateProduct(Cliente cliente) async{

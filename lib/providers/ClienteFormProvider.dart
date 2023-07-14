@@ -11,9 +11,6 @@ class ClienteFormProvider extends ChangeNotifier{
   ClienteFormProvider(this.cliente);
 
   bool isValidForm(){
-    print(cliente.nombre);
-    print(cliente.apellido);
-    print(cliente.email);
     return formKey.currentState?.validate() ?? false;
   }
 

@@ -1,73 +1,95 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_crud/screens/ListadoScreen.dart';
 import 'package:flutter_crud/services/ClienteService.dart';
-import 'package:flutter_crud/widgets/ClienteCard.dart';
 import 'package:flutter_crud/models/Cliente.dart';
 import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
-   
-   const HomeScreen({Key? key}) : super(key: key);
-  
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+int bottomSelectedIndex = 0;
+
+void pageChanged(int index) {
+  setState(() {
+    bottomSelectedIndex = index;
+  });
+}
+
+ void bottomTapped(int index) {
+    setState(() {
+      bottomSelectedIndex = index;
+      pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
+    });
+  }
+
+PageController pageController = PageController(
+  initialPage: 0,
+  keepPage: true,
+);
+
+Widget buildPageView() {
+  return PageView(
+    controller: pageController,
+    onPageChanged: (index) {
+      pageChanged(index);
+    },
+    children: <Widget>[
+      ListadoScreen(),
+      ListadoScreen(),
+      ListadoScreen()
+    ],
+  );
+}
+
+List<BottomNavigationBarItem> buildBottomNavBarItems() {
+  return [
+    BottomNavigationBarItem(
+        icon: new Icon(Icons.home),
+        label: 'Listado'
+    ),
+    BottomNavigationBarItem(
+      icon: new Icon(Icons.history),
+      label: 'Historial'
+    ),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.settings),
+         label: 'Cuenta'
+    )
+  ];
+}
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-  
-  final clienteService = Provider.of<ClienteService>(context);
-  
+    final clienteService = Provider.of<ClienteService>(context);
+
     return Scaffold(
       appBar: AppBar(title: Text('Flutter')),
-      body:ListView.separated(
-        separatorBuilder: (context, index) => Divider(
-          color: Colors.black,
-        ),
-        itemCount: clienteService.clientes.length,
-        itemBuilder:(BuildContext context, int index) => GestureDetector(
-          child: ClienteCard(
-            cliente: clienteService.clientes[index],
-          ),
-          onTap: () {
-
-             showModalBottomSheet(
-                    context: context,
-                    isDismissible: true,
-                    builder: (context) {
-                      return Wrap(
-                        children: [
-                         ListTile(
-                            leading: Icon(Icons.grid_view),
-                            title: Text('Ver'),
-                            onTap: () {
-                              clienteService.selectedProduct = clienteService.clientes[index].copy();
-                              Navigator.pushNamed(context, 'form');
-                            }
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.update),
-                            title: Text('Actualizar'),
-                            onTap: () {
-                              clienteService.selectedProduct = clienteService.clientes[index].copy();
-                              Navigator.pushNamed(context, 'form');
-                            }
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.delete),
-                            title: Text('Borrar'),
-                             onTap: () {
-                              clienteService.deleteCliente(clienteService.clientes[index].id!);
-                            }
-                          )
-                        ],
-                    );
-            });
-          }
-        )
+      body: buildPageView(),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: bottomSelectedIndex,
+        items: buildBottomNavBarItems(),
+        onTap:(index) {
+          bottomTapped(index);
+        },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          clienteService.selectedProduct = Cliente(nombre: "", apellido: "", email: "", createAt: "");
-          Navigator.pushNamed(context, 'form');
-        },
-        child: Icon(Icons.add)
-      ),
+          onPressed: () {
+            clienteService.selectedProduct =
+                Cliente(nombre: "", apellido: "", email: "", createAt: "");
+            Navigator.pushNamed(context, 'form');
+          },
+          child: Icon(Icons.add)),
     );
   }
 }
